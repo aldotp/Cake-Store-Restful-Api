@@ -9,11 +9,11 @@ Requirements
 * Golang 
 * Docker
 
-# Use
-- docker compose build (build image)
-- docker compose up (untuk menjalankan)
+Use
+- docker compose build 
+- docker compose up 
 
-# Note
+# Notes
 * Migration auto migrate saat docker image dibuat
 * Api bisa ditest menggunakan file postman (folder postman)
 
