@@ -55,7 +55,7 @@ func TestUpdateCake(t *testing.T) {
 }
 
 func TestDeleteCake(t *testing.T) {
-	request, _ := http.NewRequest("DELETE", "/cakes/1", nil)
+	request, _ := http.NewRequest("DELETE", "/cakes/3", nil)
 	response := httptest.NewRecorder()
 	routes.Router().ServeHTTP(response, request)
 	assert.Equal(t, 200, response.Code, "OK response is expected")
