@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,7 +42,7 @@ func GetCakes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Res.ResponseJSON(w, http.StatusOK, hasil)
-	log.Println("Berhasil menampilkan semua data ")
+	fmt.Println("Berhasil menampilkan semua data ")
 }
 
 func GetCakeDetail(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +71,7 @@ func GetCakeDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Res.ResponseJSON(w, http.StatusOK, cakes)
-	log.Println("Berhasil menampilkan detail data")
+	fmt.Println("Berhasil menampilkan detail data")
 }
 
 func AddNewCake(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +99,7 @@ func AddNewCake(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Res.ResponseJSON(w, http.StatusCreated, map[string]interface{}{"Insert Success, id:": lastID})
-	log.Println("Data berhasil ditambahkan")
+	fmt.Println("Data berhasil ditambahkan")
 }
 
 func UpdateCake(w http.ResponseWriter, r *http.Request) {
@@ -122,7 +122,7 @@ func UpdateCake(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Res.ResponseJSON(w, http.StatusCreated, "Update Success")
-	log.Println("Data berhasil Terupdate")
+	fmt.Println("Data berhasil Terupdate")
 }
 
 func DeleteCake(w http.ResponseWriter, r *http.Request) {
@@ -146,5 +146,5 @@ func DeleteCake(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Res.ResponseJSON(w, http.StatusOK, "Delete Success")
-	log.Println("Data berhasil dihapus")
+	fmt.Println("Data berhasil dihapus")
 }
