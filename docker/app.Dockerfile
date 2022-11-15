@@ -7,6 +7,7 @@ COPY . .
 RUN go mod tidy 
 RUN go mod download
 
-CMD ["go", "run", "main.go"]
+# CMD ["go", "run", "main.go"]
+CMD go test -v ./... && go run main.go 
 
 

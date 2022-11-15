@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	config.LoadEnv()
+	config.LoadEnv(".env")
+	config.ConnectToDatabase()
 	r := routes.Router()
 	log.Println("Server started on http://localhost:8080")
 	http.ListenAndServe(":8080", r)

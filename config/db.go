@@ -10,7 +10,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func ConnectToDatabase() *sql.DB {
+var dbPool *sql.DB
+
+func ConnectToDatabase() {
 	USER := os.Getenv("DB_USER")
 	PASS := os.Getenv("DB_PASS")
 	HOST := os.Getenv("DB_HOST")
@@ -24,13 +26,21 @@ func ConnectToDatabase() *sql.DB {
 		panic(err)
 	}
 
-	return db
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
+
+	dbPool = db
 }
 
-func LoadEnv() {
-	err := godotenv.Load(".env")
+func GetDbConnection() *sql.DB {
+	return dbPool
+}
+
+func LoadEnv(filename string) {
+	err := godotenv.Load(filename)
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatal("Error loading .env file", err.Error())
 		os.Exit(1)
 	}
 }

@@ -2,6 +2,8 @@ package helper
 
 import (
 	"encoding/json"
+	"errors"
+	"log"
 	"net/http"
 )
 
@@ -12,6 +14,11 @@ func ResponseJSON(w http.ResponseWriter, httpCode int, payload interface{}) {
 	w.Write(response)
 }
 
-func ResponseError(w http.ResponseWriter, httpCode int, message string) {
-	ResponseJSON(w, httpCode, map[string]string{"message": message})
+func ResponseError(w http.ResponseWriter, httpCode int, err error) {
+	if httpCode == http.StatusInternalServerError {
+		log.Println("Terjadi error =", err.Error())
+		err = errors.New("internal server error")
+	}
+
+	ResponseJSON(w, httpCode, map[string]string{"message": err.Error()})
 }

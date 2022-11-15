@@ -1,3 +1,4 @@
+-- SQLBook: Code
 CREATE TABLE `cakes` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(300) DEFAULT NULL,

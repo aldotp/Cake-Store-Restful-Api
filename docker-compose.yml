@@ -14,10 +14,8 @@ services:
     container_name: golang-api
     environment:
       - 'DB_PORT: 3306'
-      - 'DB_HOST: localhost'
       - 'DB_NAME: cakestore'
       - 'DB_PASS: root'
-
 
   database:
     build:

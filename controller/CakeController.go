@@ -19,41 +19,43 @@ func GetCakes(w http.ResponseWriter, r *http.Request) {
 	var cake models.Cakes
 	var hasil []models.Cakes
 
-	db := DB.ConnectToDatabase()
+	db := DB.GetDbConnection()
 
-	sqlQuery := "SELECT id, title, description, rating, image, created_at, updated_at FROM cakes order by rating desc "
-	rows, err := db.Query(sqlQuery)
+	GetCakes := "SELECT id, title, description, rating, image, created_at, updated_at FROM cakes order by rating desc "
+	rows, err := db.QueryContext(r.Context(), GetCakes)
 	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, "Terjadi Kesalahan")
-		log.Println("Terjadi error saat query data =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
-	defer rows.Close()
 
+	defer rows.Close()
 	for rows.Next() {
 		err := rows.Scan(&cake.Id, &cake.Title, &cake.Description, &cake.Rating, &cake.Image, &cake.CreatedAt, &cake.UpdatedAt)
 		if err != nil {
-			Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-			log.Println("Terjadi error saat scan data =", err.Error())
+			Res.ResponseError(w, http.StatusInternalServerError, err)
 		} else {
 			hasil = append(hasil, cake)
 		}
+
 	}
+
 	Res.ResponseJSON(w, http.StatusOK, hasil)
-	log.Println("Berhasil Menampilkan Data ")
+	log.Println("Berhasil menampilkan semua data ")
 }
 
 func GetCakeDetail(w http.ResponseWriter, r *http.Request) {
 	var cakes models.Cakes
 	params := mux.Vars(r)
 
-	db := DB.ConnectToDatabase()
+	db := DB.GetDbConnection()
 
-	sqlQuery := "SELECT id, title, description, rating, image, created_at, updated_at FROM cakes WHERE id = ?"
-	rows, err := db.Query(sqlQuery, params["id"])
+	getCakeQuery := `
+		SELECT id, title, description, rating, image, created_at, updated_at FROM cakes WHERE id = ?
+	`
+
+	rows, err := db.QueryContext(r.Context(), getCakeQuery, params["id"])
 	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat query data =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
 	defer rows.Close()
@@ -61,99 +63,80 @@ func GetCakeDetail(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		err := rows.Scan(&cakes.Id, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image, &cakes.CreatedAt, &cakes.UpdatedAt)
 		if err != nil {
-			Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-			log.Println("Terjadi error saat scan data =", err.Error())
+			Res.ResponseError(w, http.StatusInternalServerError, err)
 			return
 		}
 	}
-	Res.ResponseJSON(w, http.StatusOK, cakes)
-	log.Println("Berhasil menampilkan data dengan id", cakes.Id)
 
+	Res.ResponseJSON(w, http.StatusOK, cakes)
+	log.Println("Berhasil menampilkan detail data")
 }
 
 func AddNewCake(w http.ResponseWriter, r *http.Request) {
-
-	db := DB.ConnectToDatabase()
-	defer db.Close()
-
+	db := DB.GetDbConnection()
 	var cakes models.Cakes
 
 	if err := json.NewDecoder(r.Body).Decode(&cakes); err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat mendecode query =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
-	sqlQuery := "INSERT INTO cakes(title, description, rating, image, created_at, updated_at) VALUES (?,?,?,?, now(), now())"
-	_, err := db.Exec(sqlQuery, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image)
-	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, "Terdapat kesalahan")
-		log.Println("Terjadi error saat proses query =", err.Error())
-		return
-	}
-	Res.ResponseJSON(w, http.StatusOK, "Insert data Success")
-	log.Println("Data berhasil di Tambahkan")
 
+	AddNewCake := "INSERT INTO cakes(title, description, rating, image, created_at, updated_at) VALUES (?,?,?,?, now(), now())"
+	res, err := db.ExecContext(r.Context(), AddNewCake, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image)
+	if err != nil {
+		Res.ResponseError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	lastID, err := res.LastInsertId()
+	if err != nil {
+		Res.ResponseError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	Res.ResponseJSON(w, http.StatusCreated, map[string]interface{}{"Insert Success, id:": lastID})
+	log.Println("Data berhasil ditambahkan")
 }
 
 func UpdateCake(w http.ResponseWriter, r *http.Request) {
-
 	params := mux.Vars(r)
-	db := DB.ConnectToDatabase()
-	// r.ParseForm()
-
 	var cakes models.Cakes
+	db := DB.GetDbConnection()
 
 	if err := json.NewDecoder(r.Body).Decode(&cakes); err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, "Tidak dapat mendecode body")
-		log.Println("Terjadi error saat Mendecode =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	sqlQuery := "UPDATE cakes SET title = ?, description = ?, rating = ?, image = ? WHERE id = ?"
-	statement, err := db.Prepare(sqlQuery)
+	updateCake := "UPDATE cakes SET title = ?, description = ?, rating = ?, image = ? WHERE id = ?"
+	_, err := db.ExecContext(r.Context(), updateCake, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image, params["id"])
 	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat Memprepare query =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	_, err = statement.Exec(&cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image, params["id"])
-	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat Mengesekusi query =", err.Error())
-		return
-	}
-	Res.ResponseJSON(w, http.StatusOK, "Update Success")
-	log.Println("Data berhasil diupdate")
+	Res.ResponseJSON(w, http.StatusCreated, "Update Success")
+	log.Println("Data berhasil Terupdate")
 }
 
 func DeleteCake(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-
-	db := DB.ConnectToDatabase()
+	db := DB.GetDbConnection()
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat memproses data =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	sqlQuery := "DELETE FROM cakes WHERE id = ?"
-	statement, err := db.Prepare(sqlQuery)
+	deleteCake := "DELETE FROM cakes WHERE id = ?"
+
+	_, err = db.ExecContext(r.Context(), deleteCake, id)
 	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat Memprepare query =", err.Error())
+		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	_, err = statement.Exec(id)
-	if err != nil {
-		Res.ResponseError(w, http.StatusInternalServerError, err.Error())
-		log.Println("Terjadi error saat mengeksekusi query =", err.Error())
-		return
-	}
 	Res.ResponseJSON(w, http.StatusOK, "Delete Success")
 	log.Println("Data berhasil dihapus")
-
 }
