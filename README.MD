@@ -9,9 +9,11 @@ Requirements
 * Docker
 * Xampp (Optional)
 
-Use
+Use API, MySQL, Phpmyadmin (docker)
 - docker compose build && docker compose up 
 
+Use Unit Testing
+- docker exec -it golang-api go test -v ./...
 # Notes
 * Testing dan API sudah berjalan ketika docker compose up dijalankan
 * Migration sql sudah auto saat docker image dibuat

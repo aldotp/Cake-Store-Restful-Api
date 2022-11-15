@@ -26,6 +26,7 @@ func TestGetDetailCake(t *testing.T) {
 func TestInsertCake(t *testing.T) {
 	testBody := `
 	{
+		"id":3,
 		"title": "b", 
 		"description": "B cheesecake made of lemon",
 		"rating": 5, 

@@ -21,7 +21,9 @@ func GetCakes(w http.ResponseWriter, r *http.Request) {
 
 	db := DB.GetDbConnection()
 
-	GetCakes := "SELECT id, title, description, rating, image, created_at, updated_at FROM cakes order by rating desc "
+	GetCakes := `
+		SELECT id, title, description, rating, image, created_at, updated_at FROM cakes order by rating desc 
+	`
 	rows, err := db.QueryContext(r.Context(), GetCakes)
 	if err != nil {
 		Res.ResponseError(w, http.StatusInternalServerError, err)
@@ -81,8 +83,10 @@ func AddNewCake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	AddNewCake := "INSERT INTO cakes(title, description, rating, image, created_at, updated_at) VALUES (?,?,?,?, now(), now())"
-	res, err := db.ExecContext(r.Context(), AddNewCake, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image)
+	AddNewCake := `
+		INSERT INTO cakes(id, title, description, rating, image, created_at, updated_at) VALUES (?,?,?,?,?, now(), now())
+	`
+	res, err := db.ExecContext(r.Context(), AddNewCake, &cakes.Id, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image)
 	if err != nil {
 		Res.ResponseError(w, http.StatusInternalServerError, err)
 		return
@@ -108,7 +112,9 @@ func UpdateCake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updateCake := "UPDATE cakes SET title = ?, description = ?, rating = ?, image = ? WHERE id = ?"
+	updateCake := `
+		UPDATE cakes SET title = ?, description = ?, rating = ?, image = ? WHERE id = ?
+	`
 	_, err := db.ExecContext(r.Context(), updateCake, &cakes.Title, &cakes.Description, &cakes.Rating, &cakes.Image, params["id"])
 	if err != nil {
 		Res.ResponseError(w, http.StatusInternalServerError, err)
@@ -129,7 +135,9 @@ func DeleteCake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	deleteCake := "DELETE FROM cakes WHERE id = ?"
+	deleteCake := `
+		DELETE FROM cakes WHERE id = ?
+	`
 
 	_, err = db.ExecContext(r.Context(), deleteCake, id)
 	if err != nil {
