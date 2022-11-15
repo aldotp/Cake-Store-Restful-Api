@@ -10,8 +10,7 @@ Requirements
 * Xampp (Optional)
 
 Use
-- docker compose build 
-- docker compose up 
+- docker compose build && docker compose up 
 
 # Notes
 * Testing dan API sudah berjalan ketika docker compose up dijalankan

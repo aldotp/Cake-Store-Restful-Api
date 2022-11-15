@@ -48,7 +48,7 @@ func TestUpdateCake(t *testing.T) {
 		"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg"
 	}
 	`
-	request, _ := http.NewRequest("PATCH", "/cakes/1", bytes.NewBufferString(testBody))
+	request, _ := http.NewRequest("PATCH", "/cakes/3", bytes.NewBufferString(testBody))
 	response := httptest.NewRecorder()
 	routes.Router().ServeHTTP(response, request)
 	assert.Equal(t, 201, response.Code, "OK response is expected")
