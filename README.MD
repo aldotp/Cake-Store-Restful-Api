@@ -10,10 +10,10 @@ Requirements
 * Xampp (Optional)
 
 Use API, MySQL, Phpmyadmin (docker)
-- docker compose build && docker compose up 
+- docker compose up 
 
-Use Unit Testing
-- docker exec -it golang-api go test -v ./...
+Use Unit Testing (docker)
+- docker exec -it -e DB_HOST=golang-db -e DB_PASS=root -e DB_NAME=cakestore  golang-api go test -v ./...
 # Notes
 * Testing dan API sudah berjalan ketika docker compose up dijalankan
 * Migration sql sudah auto saat docker image dibuat
