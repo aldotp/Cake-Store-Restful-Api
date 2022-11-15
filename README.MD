@@ -22,17 +22,22 @@ Use Unit Testing (docker)
 
 # API Documentation
 GET /cakes
+
 Menampilkan semua data
 
 GET /cakes/{id}
+
 Menampilkan detail cakes berdasarkan id
 
 POST /cakes 
+
 Menambah data cakes
 
 PATCH /cakes/{id}
+
 Edit data cakes
 
 DELETE /cakes{id}
+
 Hapus data cakes berdasarkan id
 
