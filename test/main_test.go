@@ -7,9 +7,9 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	log.Println("*****************Testing*****************")
+	log.Println("***************** Testing *****************")
 	config.LoadEnv("../.env.test")
 	config.ConnectToDatabase()
 	m.Run()
-	log.Println("****************test ended***************")
+	log.Println("**************** Test Ended ***************")
 }
