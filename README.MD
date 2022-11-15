@@ -10,7 +10,7 @@ Requirements
 * Xampp (Optional)
 
 Use API, MySQL, Phpmyadmin (docker)
-- docker compose up 
+- docker compose build && docker compose up 
 
 Use Unit Testing (docker)
 - docker exec -it -e DB_HOST=golang-db -e DB_PASS=root -e DB_NAME=cakestore  golang-api go test -v ./...

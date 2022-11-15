@@ -23,7 +23,7 @@ func TestGetAllCake(t *testing.T) {
 		t.Errorf("return wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `[{"id":2,"title":"Blue Cheese Cake","description":"Good taste with blue color","rating":8,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31+07:00","updated_at":"2020-02-13T09:30:23+07:00"},{"id":1,"title":"Lemon cheesecake","description":"A cheesecake made of lemon","rating":7,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31+07:00","updated_at":"2020-02-13T09:30:23+07:00"}]`
+	expected := `[{"id":2,"title":"Blue Cheese Cake","description":"Good taste with blue color","rating":8,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31Z","updated_at":"2020-02-13T09:30:23Z"},{"id":1,"title":"Lemon cheesecake","description":"A cheesecake made of lemon","rating":7,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31Z","updated_at":"2020-02-13T09:30:23Z"}]`
 
 	if response.Body.String() != expected {
 		t.Errorf("return unexpected body: got %v want %v", response.Body.String(), expected)
@@ -43,7 +43,7 @@ func TestGetDetailCake(t *testing.T) {
 		t.Errorf("return wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `{"id":1,"title":"Lemon cheesecake","description":"A cheesecake made of lemon","rating":7,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31+07:00","updated_at":"2020-02-13T09:30:23+07:00"}`
+	expected := `{"id":1,"title":"Lemon cheesecake","description":"A cheesecake made of lemon","rating":7,"image":"https://img.taste.com.au/ynYrqkOs/w720-h480-cfill-q80/taste/2016/11/sunny-lemon-cheesecake-102220-1.jpeg","created_at":"2020-02-01T10:56:31Z","updated_at":"2020-02-13T09:30:23Z"}`
 
 	if response.Body.String() != expected {
 		t.Errorf("return unexpected body: got %v want %v", response.Body.String(), expected)
