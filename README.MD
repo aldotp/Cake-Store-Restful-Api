@@ -1,10 +1,10 @@
 # Cakestore API
 
 **URL API:**
-> http:127.0.0.1:8080
+> http://127.0.0.1:8080
 
 **URL phpmyadmin:**
-> http:127.0.0.1:5003
+> http://127.0.0.1:5003
 
 # Instalation
 Requirements
@@ -26,7 +26,7 @@ Use Unit Testing (docker)
 # API Documentation
 GET /cakes
 
-Menampilkan semua data
+Menampilkan semua data urut berdasarkan rating
 
 GET /cakes/{id}
 
